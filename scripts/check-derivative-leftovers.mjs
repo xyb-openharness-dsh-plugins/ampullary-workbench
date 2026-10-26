@@ -98,6 +98,8 @@ export function scanProject(root = process.cwd()) {
   }
   const hits = []
   for (const f of files) {
+    /* 跳过检查器自身：它的词表与自测样本必然包含这些词，否则每次都报自己（家族假阳性来源之一） */
+    if (resolve(f) === resolve(fileURLToPath(import.meta.url))) continue
     let text
     try { text = readFileSync(f, 'utf8') } catch { continue }
     hits.push(...scanText(text, relative(root, f)))

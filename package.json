@@ -20,7 +20,7 @@
     "NOTICE.md"
   ],
   "scripts": {
-    "check": "node --check dsh/index.js && node --check lib/client.js && node scripts/check-workbench-package.mjs . && node scripts/check-host-contract.mjs && node scripts/smoke-activate.mjs && node scripts/check-probe-coverage.mjs && node scripts/check-version-literal.mjs && node scripts/check-static-refs.mjs && node scripts/check-choice-limit.mjs && node scripts/check-assertion-strength.mjs && node scripts/check-derivative-leftovers.mjs .",
+    "check": "node --check dsh/index.js && node --check lib/client.js && node --check lib/layout.js && node scripts/check-workbench-package.mjs . && node scripts/check-host-contract.mjs && node scripts/smoke-activate.mjs && node scripts/check-probe-coverage.mjs && node scripts/build-version.mjs --check && node scripts/check-version-literal.mjs && node scripts/check-wording.mjs . && node scripts/check-static-refs.mjs && node scripts/check-choice-limit.mjs && node scripts/check-assertion-strength.mjs && node --test test/*.test.mjs && node scripts/check-derivative-leftovers.mjs .",
     "check:version-literal": "node scripts/check-version-literal.mjs",
     "check:host": "node scripts/check-host-contract.mjs",
     "check:static-refs": "node scripts/check-static-refs.mjs",
@@ -29,12 +29,17 @@
     "verify:desktop": "node scripts/verify-desktop-load.mjs",
     "test": "node --test test/*.test.mjs",
     "audit": "node scripts/check-conformance.mjs .",
-    "release:check": "npm run check && npm run test && npm run audit",
+    "release:check": "npm run check && npm run audit && npm run probe:proto",
     "pack:check": "npm pack --dry-run",
     "probe:artifact": "node scripts/serve-artifact.mjs",
     "probe:tabs": "python3 scripts/verify-tabs-on-artifact.py",
     "probe:page-view": "node scripts/probe-page-view.mjs",
-    "probe:primer": "node scripts/probe-disease-primer.mjs"
+    "probe:primer": "node scripts/probe-disease-primer.mjs",
+    "build:proto-data": "node scripts/build-prototype-data.mjs",
+    "probe:proto": "node scripts/probe-proto.mjs",
+    "build:version": "node scripts/build-version.mjs",
+    "check:version": "node scripts/build-version.mjs --check",
+    "check:wording": "node scripts/check-wording.mjs ."
   },
   "dsh": {
     "bundle": {

@@ -26,7 +26,10 @@ const m = app.match(/var ROUTES = \[([^\]]+)\]/);
 if (!m) fails.push('routes: 在 app.js 里找不到 var ROUTES = [...]');
 else {
   const routes = m[1].split(',').map((s) => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
-  const PROBES = ['scripts/probe-page-view.py', 'scripts/probe-ip-matrix.py', 'scripts/probe-write-paths.py', 'scripts/probe-router.py'];
+  /* 只列"按路由逐个点过去"的探针。
+     probe-page-view.mjs / probe-disease-primer.mjs 跑的是单页 demo（独立 html），
+     不遍历 ROUTES，把它们列进来只会产生"漏了 11 条路由"的假红。 */
+  const PROBES = ['scripts/probe-proto.mjs'];
   let checked = 0;
   for (const rel of PROBES) {
     let txt;

@@ -8,8 +8,8 @@
  * 改版时只动了 VERSION 和 package.json，页面还显示旧版本，而**没有任何检查会响**。
  *
  * 两个病种独立复现（L2 门槛）：
- *   ① cervical-workbench `scripts/check-version.mjs:67`（页面字面量去重比对）
- *   ② PF-ILD-workbench v0.2.0 升版时 audit 报红：`public/index.html 里有版本字面量
+ *   ① cervical-workbench `scripts/check-version.mjs:67`（页面字面量去重比对）  <!-- leftover-allow：本行是历史案例出处，不是本仓残留 -->
+ *   ② PF-ILD-workbench v0.2.0 升版时 audit 报红：`public/index.html 里有版本字面量  <!-- leftover-allow：本行是历史案例出处，不是本仓残留 -->
  *      与 VERSION 不一致（0.1.0）` —— 徽标与页脚各一处，移植脚本只替换了第三处。
  *
  * 正确形态（PF-ILD 已落地）：页面里**一个版本字面量都不许有**，全部走占位符
