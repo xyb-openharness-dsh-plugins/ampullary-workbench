@@ -193,6 +193,11 @@ html.dp-lock, html.dp-lock body{ overflow: hidden; }
   .dp-overlay, .dp-panel{ animation: none; }
 }
 
+/* 36 号 §2.5：指南原件/二次来源链接（可点开或下载） */
+.dp-link { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.dp-link:hover { text-decoration-thickness: 2px; }
+.dp-miss { color: #b3372e; font-weight: 600; }
+
 /* 疾病概要内的「和 AI 讨论这个」（IP11 对整页/弹窗类的要求，小壶宝 2026-10-26） */
 .dp-discuss-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
 .dp-discuss{background:var(--violet-soft);border-color:#dfe6cd;color:var(--violet-deep);font-weight:600}

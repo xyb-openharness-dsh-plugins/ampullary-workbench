@@ -1,4 +1,4 @@
-/* 小壶宝 AmpuPal v0.1.0 — 交互原型（G2 产物，非业务实现）
+/* 小壶宝 AmpuPal v0.1.1 — 交互原型（G2 产物，非业务实现）
  *
  * 三条必须遵守的规矩，写在代码最前面，因为后面每一屏都在执行它：
  *   ① 事实可做（值 / 日期 / 谁说的 / 差值 / 天数），必须能点回来源；
@@ -13,7 +13,7 @@
  */
 
 const APP = {
-  name: '小壶宝', en: 'AmpuPal', version: 'v0.1.0', build: '2026-10-26',
+  name: '小壶宝', en: 'AmpuPal', version: 'v0.1.1', build: '2026-10-27',
   stage: '阶段 2 · HTML 原型（G2 未签）'
 };
 
@@ -340,13 +340,50 @@ function pinBar() {
     </div>`;
 }
 
+/* 36 号 §2.6：看板首卡的病程状态卡。
+ * 四件：卡头 eyebrow（D+N · 距下一阶段）／大字天数（锚点日派生，不手填）／
+ * 现状行（阶段原文 + 状态 + 下次日期与事项）／出口按钮排（主按钮进当前阶段核心页，
+ * 副按钮打开疾病概要整页）。锚点 = 手术日（Day 0）。无锚点时整卡「待初始化」。 */
+function statusCard() {
+  const anchor = D.surgery && D.surgery.date;
+  const primerBtn = '<button type="button" data-action="primer">疾病概要：壶腹部腺癌是什么？</button>';
+  if (!anchor) {
+    return `<section class="panel status-card" aria-label="病程状态卡">
+      <span class="eyebrow">D+N 状态卡</span>
+      <div class="day">待初始化</div>
+      <p class="status-line">还没有锚点日（手术日）。先完成三步初始化，这里才会按天计算。</p>
+      <div class="status-actions">
+        <button class="primary" data-action="go" data-view="settings">开始三步初始化 →</button>
+        ${primerBtn}
+      </div>
+    </section>`;
+  }
+  const n = dayGap(anchor, TODAY);
+  const recovery = (D.bands || []).find((b) => b.kind === 'recovery');
+  const inHospital = recovery && TODAY <= recovery.to;
+  const stage = inHospital ? '手术段 · 术后住院' : '术后功能段 · 随访中';
+  const next = (D.visits || []).filter((v) => v.planned && v.on >= TODAY)
+    .sort((a, b) => a.on.localeCompare(b.on))[0];
+  const nextLine = next ? `下次：${next.on}（${next.what}）` : '下次：暂无已排期事项';
+  return `<section class="panel status-card" aria-label="病程状态卡">
+    <span class="eyebrow">D+${n} 状态卡 · 距下次复查</span>
+    <div class="day">第 ${n} 天</div>
+    <p class="status-line">当前阶段：${esc(stage)} · 锚点 ${esc(anchor)}（手术日，Day 0）</p>
+    <p class="status-line">${esc(nextLine)}</p>
+    <div class="status-actions">
+      <button class="primary" data-action="go" data-view="followup">看术后随访（按次）→</button>
+      ${primerBtn}
+    </div>
+  </section>`;
+}
+
 function vDash() {
   const [t0, t1] = domainRange();
   const { svg } = chartSVG(t0, t1);
   const cats = D.catOrder;
   const tb = last(MET.tbil), ca = last(MET.ca199), w = last(MET.weight);
   const sug = D.surgery;
-  return pageHead('一图秀') + stageBar(null) + `
+  return pageHead('一图秀') + stageBar(null) + statusCard() + `
     <div class="notice"><b>这一屏只回答「什么时候记录了什么」。</b>
       ① 三条线量纲不同（胆红素 μmol/L、CA19-9 U/mL、体重 kg），各按自身「全部记录」的最小值–最大值归一化，
       纵向位置<b>不代表数值可比</b>；② 治疗条与事件竖线只表示"哪天发生了什么"；
@@ -1202,6 +1239,12 @@ document.addEventListener('click', (e) => {
   const a = el.dataset.action;
 
   if (a === 'go') { e.preventDefault(); go(el.dataset.view); return; }
+  if (a === 'primer') {
+    /* 状态卡副按钮：打开疾病概要整页；焦点交回顶栏常驻「?」，避免看板重渲染后焦点丢失 */
+    const t = document.querySelector('.top-actions [data-primer-open]');
+    if (window.DiseasePrimer) window.DiseasePrimer.open(t);
+    return;
+  }
   if (a === 'sub') { state.sub = el.dataset.sub; go(state.view, el.dataset.sub); return; }
   if (a === 'pin') {
     state.pin = { code: el.dataset.code, d: el.dataset.date };

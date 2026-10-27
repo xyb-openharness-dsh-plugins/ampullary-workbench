@@ -861,3 +861,9 @@ html.pv-lock,html.pv-lock body{overflow:hidden}
 .pinbar .pin-clear{margin-left:auto;border:1px solid #ddd2bb;background:#fff;color:#6f6a5b;
   border-radius:8px;padding:4px 10px;font-size:calc(11.5px * var(--tz));cursor:pointer}
 .pinbar .pin-clear:hover{border-color:#c9bb9c;color:#3c5226}
+
+/* 36 号 §2.6：看板首卡病程状态卡（四件结构） */
+.status-card{margin-bottom:16px}
+.status-card .day{font-size:28px;font-weight:600;letter-spacing:-.5px;color:var(--violet-deep);margin:8px 0 6px;line-height:1.15}
+.status-card .status-line{margin:3px 0;font-size:12.5px;color:var(--muted)}
+.status-card .status-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
