@@ -2,6 +2,35 @@
 
 只增不删；每条写清"改了什么 + 为什么 + 用户可见结果"。版本号与 VERSION、package.json 三处必须一致。
 
+## 0.1.3 — 2026-10-28
+
+### 装机界面补齐（装了只有占位骨架）
+
+改了什么：
+
+- **新增 `public/`**：由 `scripts/build-public.mjs` 从 `prototypes/v0.2` 逐字符复制 7 个文件
+  （`index.html` / `app.js` / `style.css` / `demo-data.js` / `primer-data.js` / `primer.css` / `primer.js`），
+  只改 `index.html` 里的版本字面量与顶部说明条的"演示态"措辞；脚本支持 `--check`（已接进 `npm run check`）。
+- **新增 `dsh/server.js`** 静态层：只从 `public/` 出文件，`..`、绝对路径、符号链接逃逸一律 404；
+  提供 `stripMountPrefix()`，剥前缀时带/不带尾斜杠两种形态都认。
+- **注册 UI 路由**：`dsh/index.js` 新增 `UI_PREFIX`（外壳 iframe 入口，带尾斜杠）与
+  `UI_ROUTE`（注册专用，去尾斜杠）。宿主 `dsh-host-webserver` 的 prefix 判据是
+  `pathname === prefix || pathname.startsWith(prefix + '/')` 且不重写 `req.url`；
+  拿带尾斜杠的写法注册时，`app.js`/`style.css` 命不中路由、落到宿主 SPA 兜底（返回 HTML），
+  浏览器把 HTML 当 JS/CSS 解析 → 装机后业务区整页空白。
+- **`lib/client.js` 业务区改 iframe**：指向 `UI_ENTRY`；HEAD 探活失败（或响应不是 HTML）才退回原占位骨架，
+  骨架与"大字"按钮仅在兜底模式出现。
+- **描述符 businessWidth 进 `layout`**：宿主只读 `descriptor.layout.businessWidth`，
+  顶层写 `businessWidth` 会被忽略并退回默认 0.36。
+- **`package.json.files` 增加 `public`**，版本升 `0.1.3`。
+- **`scripts/check-choice-limit.mjs` 收窄判据**：只认带选择语义（`sel`/`checked`/`MAX`/`toast`）的
+  上限分支；否则 `public/app.js` 里 `length > 1`、`length > 7` 这类纯数据过滤会被误判成"超限没回滚"。
+
+为什么：本仓此前没有 `public/`，dsh 层也没有静态 UI 路由，装机后外壳只能显示占位骨架。
+
+用户可见结果：面板业务区出现完整的壶腹部腺癌工作台（11 个视图），`/api/ampullary/ui/app.js`
+返回 `text/javascript` 而不是 HTML；路由探针 200 + MIME 正确，路径穿越 404。
+
 ## 0.1.1 — 2026-10-27
 
 ### 36 号 v2 补齐（指南可点 + 状态卡）

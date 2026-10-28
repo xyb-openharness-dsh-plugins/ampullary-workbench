@@ -118,6 +118,10 @@ for (const rel of files.sort()) {
          回滚"看起来有"其实在拒绝路径上不可达。） */
     const { body, hasReject } = rejectBranch(lines, i)
     if (!hasReject) return
+    /* 只认「用户选择上限」形态：判据行或分支体里要出现选择语义
+       （sel / checked / MAX 常量 / toast）。否则 `length > 1`、`length > 7`
+       这类纯数据过滤/取上一个点的三元式会被误判成"超限却没回滚"。 */
+    if (!/sel|checked|MAX|toast/i.test(line) && !/sel|checked|MAX|toast/i.test(body)) return
     if (ROLLBACK_RE.test(body)) {
       suppressed.push(rel + ':' + (i + 1))
       return

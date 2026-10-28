@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小壶宝 AmpuPal · 壶腹部腺癌工作台 v0.1.3</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235c7a3b'/%3E%3Ctext x='16' y='23' font-size='19' font-family='PingFang SC,sans-serif' fill='white' text-anchor='middle'%3E壶%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="primer.css">
+</head>
+<body data-tz="sm">
+<a class="skip" href="#main">跳到主要内容</a>
+
+<div class="prototype-bar">
+  <span><b>开发版 v0.1.3</b> · 全部为合成演示资料，不含真实患者信息</span>
+  <span>本机资料整理 · 只记录不判定 · 判断归主诊团队</span>
+</div>
+
+<div class="workspace">
+  <aside class="sidebar" aria-label="小壶宝业务导航">
+    <div class="brand no-mark"><div><strong>小壶宝</strong><span>AmpuPal · 三段病程，分开记</span></div></div>
+    <button class="profile profile-btn" id="profile-btn" data-action="profile" aria-label="查看演示档案信息">
+      <div class="avatar" id="profile-avatar" aria-hidden="true">陈</div>
+      <div><b id="profile-name">陈慧兰的资料</b><span id="profile-meta">63 岁 · 壶腹部腺癌 · 术后 8 个月</span></div>
+      <span class="profile-caret" aria-hidden="true">⌄</span>
+    </button>
+    <nav id="nav" aria-label="一级导航"></nav>
+    <div class="sidebar-bottom">
+      <span class="eyebrow">小 X 宝家族</span>
+      <p>减黄一段，<br>手术一段，<br>术后功能一段。<br>三段并列，不相加。</p>
+      <button class="text-button" data-action="help">原型操作说明 ↗</button>
+    </div>
+  </aside>
+
+  <div class="work-area">
+    <!-- 顶栏三段式（20 号）：左=品牌 + 版本 chip ／ 中=状态说明 ／ 右=主按钮组 -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="breadcrumb">小壶宝工作台 <span>/</span> <b id="breadcrumb">一图秀</b></div>
+        <button class="ver-chip" id="ver-chip" data-action="about" aria-label="关于小壶宝：查看版本号与构建信息">v0.1.3</button>
+      </div>
+      <div class="topbar-mid"><span id="topbar-status">全部资料在本机 · 最近一次导入 2026-10-20</span></div>
+      <div class="topbar-right top-actions">
+        <button class="status" id="dir-state" data-action="settings" aria-label="资料目录：已选定本机文件夹"><i></i><span>资料目录</span><b>已选定</b></button>
+        <button class="status" id="agent-toggle" data-action="agent" aria-expanded="false" aria-controls="agent-dock">
+          <i class="grey"></i><span id="agent-label">AI 对话</span><b id="agent-state">未打开</b>
+        </button>
+        <button data-action="settings" aria-label="打开设置">设置</button>
+        <button id="font-toggle" data-action="tz" aria-pressed="false" title="切换字号档位（标准 / 大字 / 特大）">字号 Aa</button>
+      </div>
+    </header>
+
+    <div class="work-grid" id="work-grid">
+      <main id="main" tabindex="-1"></main>
+
+      <div class="splitter" id="splitter" role="separator" aria-orientation="vertical"
+           aria-label="调整 AI 对话面板宽度" aria-valuemin="25" aria-valuemax="45" aria-valuenow="35"
+           tabindex="0" hidden></div>
+
+      <aside class="agent-dock" id="agent-dock" aria-label="AI 会话面板" hidden>
+        <div class="agent-head">
+          <span class="dot" id="agent-dot" aria-hidden="true"></span><b>AI 对话</b>
+          <div class="spacer"></div>
+          <button class="icon-button" data-action="agent" aria-label="收起 AI 对话面板（不会结束会话）" title="收起（不会结束会话）">×</button>
+        </div>
+        <!-- 会话区始终挂载：收起只是 display:none，不销毁、不 close/delete（20 号） -->
+        <div class="agent-body" id="agent-body">
+          <div id="agent-session" hidden></div>
+          <div id="agent-demo">
+            <p class="agent-note"><b>演示面板。</b>这里没有连到任何模型：<b>未发送任何内容</b>，你写的字只留在本页内存里。
+              真实版本走 DSH 宿主的原生会话接口（`currentSession()` / `ownsSession()`），本原型不冒充已接通。</p>
+            <div class="agent-log" id="agent-log" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="agent-foot">
+          <label class="visually-hidden" for="agent-input">给 AI 的草稿</label>
+          <textarea id="agent-input" placeholder="由「和 AI 讨论」填入本页事实摘要，或自己写。不会自动发送。"></textarea>
+          <div class="agent-actions">
+            <button class="primary" data-action="agent-draft" title="演示：只在本页生成一条假的回复">模拟回复（演示）</button>
+            <button data-action="agent-clear">清空草稿</button>
+          </div>
+          <p class="agent-hint" id="agent-hint">待你发送 · 当前为演示态，没有发送通道</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      小壶宝 · 与壶腹部腺癌患者和照护者一起记录、看懂、准备沟通
+      <span class="ver-line"><b id="app-version">v0.1.3</b><em id="app-build">2026-10-27</em></span>
+    </footer>
+  </div>
+</div>
+
+<!-- 整页视图容器（32 号）：返回与关闭是两个入口，history 是导航栈唯一真源 -->
+<div class="pageview" id="pageview" hidden aria-hidden="true">
+  <div class="pageview-head">
+    <button class="pv-btn" data-action="pv-back" aria-label="返回上一页">← <span>返回</span></button>
+    <div class="pv-title"><span class="eyebrow" id="pv-eyebrow">小壶宝</span><h2 id="pv-title">—</h2></div>
+    <button class="pv-btn" data-action="pv-close" aria-label="关闭并回到一图秀">✕</button>
+  </div>
+  <div class="pageview-body" id="pv-body" tabindex="0"></div>
+</div>
+
+<dialog id="dialog" aria-labelledby="dialog-title">
+  <div class="dialog-head">
+    <div><span class="eyebrow" id="dialog-eyebrow">小壶宝</span><h2 id="dialog-title"></h2></div>
+    <button class="icon-button" data-action="close" aria-label="关闭弹窗">×</button>
+  </div>
+  <div id="dialog-body" class="dialog-body"></div>
+  <div id="dialog-foot" class="dialog-foot"></div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="demo-data.js"></script>
+<script src="primer-data.js"></script>
+<script src="primer.js"></script>
+<script src="app.js"></script>
+</body></html>
