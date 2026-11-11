@@ -1,3 +1,12 @@
+## 0.1.6（2026-11-11，AI 对话面板契约第三轮复核）
+
+- **修掉「无会话按钮被禁用」的死路**：`disabled: !hasConversation` → `disabled: !canOpenAgent || creatingSession`，
+  现在没有会话也能点「AI 对话」走 `newSession(defaultWorkspace().workspaceId)` 创建
+- 创建中 `creatingSession` pending 态防重复点击；失败在工作台内显示原因；取消目录提示「可再次点击重试」
+- 补齐真正的**会话变化订阅**：`desktopWorkbenches.subscribe()` → `paneTick` 重渲染（0.1.5 记为已做，代码里没有）
+- 顶栏提示与按钮配色按「是否有会话 / 能否创建」分开，不再把无会话写成「AI 对话暂不可用」
+- 版本号归位：VERSION 0.1.6 · `lib/version.js` 重新生成 · `public/index.html` 由 build-public 重生成（此前 0.1.5/0.1.4 三处打架）
+
 ## 0.1.5（2026-11-11，AI 对话面板激活修复第二轮）
 
 - 创建走 defaultWorkspace + newSession（不再 ensureSession/pickDirectory）

@@ -1,6 +1,6 @@
 {
   "name": "@xyb-community/ampullary-workbench",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "本机优先的壶腹部腺癌（Ampullary Adenocarcinoma）病理与术前胆道引流档案、胰十二指肠切除术后随访、黄疸与营养代谢、临床试验三步匹配工作台",
   "private": true,
   "type": "module",
